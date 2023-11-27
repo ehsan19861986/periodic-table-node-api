@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/.a9cc38ee5b70d88e1881f4f6b85a2b40da7067f4-audit.json",
+    "files": [
+        {
+            "date": 1700620582754,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/error-2023-11-21.log",
+            "hash": "737c4ab092200fa0e94c3e07b0cf9448d44539e22734aef64ae8b0992f964286"
+        }
+    ],
+    "hashType": "sha256"
+}
