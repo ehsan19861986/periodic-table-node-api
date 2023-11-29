@@ -65,7 +65,7 @@ exports.updateElementTable = async function () {
     return 0;
   } catch (error) {
     logger.error(
-      "setupElementTable, initElementTable function, an error happened while reading table data from file. the Error is ",
+      "setupElementTable, updateElementTable function, an error happened while reading table data from file. the Error is ",
       error
     );
     return 1;

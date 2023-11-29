@@ -14,6 +14,11 @@
             "date": 1701012599759,
             "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-11-26.log",
             "hash": "049e501374488df7f4d4c2b444e30962fc2b3d8c161e4f04818364444158ddcc"
+        },
+        {
+            "date": 1701282569071,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-11-29.log",
+            "hash": "6845a69c186fb8a0a73b016d36aa3d28888c5f5bb32f0c36415745edf9635e3c"
         }
     ],
     "hashType": "sha256"
