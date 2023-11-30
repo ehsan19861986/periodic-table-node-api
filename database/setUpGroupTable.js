@@ -1,22 +1,22 @@
 const fs = require("fs");
 const logger = require("../winstonConfig");
 const path = require("path");
-const Property = require("../models/property");
+const Group = require("../models/group");
 
-exports.initPropertyTable = async function (updateDatabase = false) {
+exports.initGroupTable = async function (updateDatabase = false) {
   try {
     if (updateDatabase) {
-      await Property.deleteMany({});
+      await Group.deleteMany({});
     }
-    const storedPropertyCount = await Property.countDocuments({});
-    if (!storedPropertyCount) {
+    const storedGroupCount = await Group.countDocuments({});
+    if (!storedGroupCount) {
       const tableData = fs.readFileSync(
         path.join(__dirname, "..", "PubChemElements_all.json"),
         "utf8"
       );
 
       const {
-        Table: { Row },
+        Group: { Row },
       } = JSON.parse(tableData);
       for (const eleObj of Row) {
         const { Cell: elementObj } = eleObj;
@@ -48,7 +48,7 @@ exports.initPropertyTable = async function (updateDatabase = false) {
     return 0;
   } catch (error) {
     logger.error(
-      "setupPropertyTable, initPropertyTable function, an error happened while reading table data from file. the Error is ",
+      "setUpGroupTable, initPropertyTable function, an error happened while reading table data from file. the Error is ",
       error
     );
     return 1;
