@@ -11,38 +11,17 @@ exports.initGroupTable = async function (updateDatabase = false) {
     const storedGroupCount = await Group.countDocuments({});
     if (!storedGroupCount) {
       const tableData = fs.readFileSync(
-        path.join(__dirname, "..", "PubChemElements_all.json"),
+        path.join(__dirname, "..", "periodicTableGroups.json"),
         "utf8"
       );
-
-      const {
-        Group: { Row },
-      } = JSON.parse(tableData);
-      for (const eleObj of Row) {
-        const { Cell: elementObj } = eleObj;
-
-        const elementProperty = new Property({
-          standardState: elementObj[11],
-          oxidationStates: elementObj[10],
-          electronegativity:
-            elementObj[6] !== "" ? parseFloat(elementObj[6]) : "N/A",
-          atomicRadius: elementObj[7] !== "" ? parseInt(elementObj[7]) : "N/A",
-          ionizationEnergy:
-            elementObj[8] !== "" ? parseFloat(elementObj[8]) : "N/A",
-          electronAffinity:
-            elementObj[9] !== "" ? parseFloat(elementObj[9]) : "N/A",
-          meltingPoint:
-            elementObj[12] !== "" ? parseFloat(elementObj[12]) : "N/A",
-          boilingPoint:
-            elementObj[13] !== "" ? parseFloat(elementObj[13]) : "N/A",
-          density: elementObj[14] !== "" ? parseFloat(elementObj[14]) : "N/A",
-          electronConfiguration: elementObj[5],
-          groupBlock: elementObj[15],
-          yearDiscovered:
-            elementObj[16] !== "" ? parseInt(elementObj[16]) : "N/A",
-          elementId: parseInt(elementObj[0]),
+      const { groups } = JSON.parse(tableData);
+      for (const groupObj of groups) {
+        const groupProperty = new Group({
+          name: groupObj.name,
+          description: groupObj.description,
+          listOfElements: groupObj.listOfElements,
         });
-        await elementProperty.save();
+        await groupProperty.save();
       }
     }
     return 0;

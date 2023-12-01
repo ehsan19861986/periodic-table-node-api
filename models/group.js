@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const { schema } = mongoose;
+const { Schema } = mongoose;
 
-const groupSchema = schema({
+const groupSchema = Schema({
   name: String,
   description: String,
   listOfElements: [
