@@ -1,11 +1,13 @@
 const express = require("express");
-
 const elementRoutes = require("./routes/element");
 const bodyParser = require("body-parser");
-const DBConnection = require("./database/DBConnection");
-const {initChemicalPeriodicTableDB} = require('./database/setupDB')
+const element = require("./models/element");
+const group = require("./models/group");
+const property = require("./models/property");
+const { main } = require("./database/DBConnection");
+const logger = require("./winstonConfig");
+const mongoose = require("mongoose");
 const app = express();
-initChemicalPeriodicTableDB();
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
@@ -20,16 +22,54 @@ app.use((req, res, next) => {
 
 app.use("/element", elementRoutes);
 
-DBConnection.main()
-  .then((result) => {
-    app.listen(8080);
+main()
+  .then(() => {
+    return element.countDocuments({});
+  })
+  .then((elementCount) => {
+    if (elementCount !== 118) {
+      const err = new Error(
+        "database for periodic table elements hasn't been initiated yet"
+      );
+      err.statusCode = 503;
+      throw err;
+    } else {
+      return property.countDocuments({});
+    }
+  })
+  .then((propertyCount) => {
+    if (propertyCount !== 118) {
+      const err = new Error(
+        "database for periodic table element properties hasn't been initiated yet"
+      );
+      err.statusCode = 503;
+      throw err;
+    } else {
+      return group.countDocuments({});
+    }
+  })
+  .then((groupCount) => {
+    if (groupCount !== 18) {
+      const err = new Error(
+        "database for periodic table element groups hasn't been initiated yet"
+      );
+      err.statusCode = 503;
+      throw err;
+    } else {
+      app.listen(8080);
+    }
   })
   .catch((error) => {
-    if (!error.statusCode) {
+    if (!error) {
       error.statusCode = 503;
+      error.message = "MongoDB service is unavailable";
     }
-    error.message = "MongoDB service is unavailable";
-    console.log(error)
+    logger.error(
+      "app, an error happened while starting the server. the Error is ",
+      error
+    );
+    mongoose.disconnect();
+    process.exit(1);
   });
 
 app.use((error, req, res, next) => {
