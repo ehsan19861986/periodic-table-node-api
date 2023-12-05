@@ -26,6 +26,7 @@ exports.initElementTable = async function (updateDatabase = false) {
           symbol: elementObj[1],
           atomicNumber: parseInt(elementObj[0]),
           atomicMass: parseFloat(elementObj[3]),
+          propertyId: parseInt(elementObj[0]),
         });
         await element.save();
       }

@@ -4,6 +4,9 @@ const elementController = require("../controllers/element");
 
 const router = express.Router();
 
-router.get("/non-columnwise-groups", elementController.getnonColumnWiseGroups);
+router.get(
+  "/get-element-based-on-index/:elementIndex",
+  elementController.getElementBasedOnIndex
+);
 
 module.exports = router;

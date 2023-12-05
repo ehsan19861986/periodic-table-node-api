@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const propertySchema = Schema({
+  _id: Number,
   standardState: String,
   oxidationStates: String,
   electronegativity: Schema.Types.Mixed,

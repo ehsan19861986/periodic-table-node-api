@@ -7,6 +7,10 @@ const elementSchema = new Schema({
   symbol: String,
   atomicNumber: Number,
   atomicMass: Number,
+  propertyId: {
+    type: Number,
+    ref: "Property",
+  },
 });
 
 module.exports = mongoose.model("Element", elementSchema);
