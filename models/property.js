@@ -3,6 +3,8 @@ const { Schema } = mongoose;
 
 const propertySchema = Schema({
   _id: Number,
+  atomicNumber: Number,
+  atomicMass: Number,
   standardState: String,
   oxidationStates: String,
   electronegativity: Schema.Types.Mixed,

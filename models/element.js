@@ -5,8 +5,6 @@ const elementSchema = new Schema({
   _id: Number,
   name: String,
   symbol: String,
-  atomicNumber: Number,
-  atomicMass: Number,
   propertyId: {
     type: Number,
     ref: "Property",

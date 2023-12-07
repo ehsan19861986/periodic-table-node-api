@@ -9,4 +9,8 @@ router.get(
   elementController.getElementBasedOnIndex
 );
 
+router.get(
+  "/get-elements-property-ordered/:propertyName&:recordLimit",
+  elementController.getElementsOrderedByProperty
+);
 module.exports = router;

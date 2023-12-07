@@ -23,6 +23,8 @@ exports.initPropertyTable = async function (updateDatabase = false) {
 
         const elementProperty = new Property({
           _id: parseInt(elementObj[0]),
+          atomicNumber: parseInt(elementObj[0]),
+          atomicMass: parseFloat(elementObj[3]),
           standardState: elementObj[11],
           oxidationStates: elementObj[10],
           electronegativity:
