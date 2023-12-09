@@ -153,3 +153,51 @@ exports.getElementsOrderedByProperty = (req, res, next) => {
       next(error);
     });
 };
+
+exports.getAncientElements = (req, res, next) => {
+  Element.find({}, null)
+    .select({ _id: 0, __v: 0 })
+    .populate({
+      path: "propertyId",
+      modal: "Property",
+      select: {
+        _id: 0,
+        __v: 0,
+        yearDiscovered: 0,
+      },
+      match: { yearDiscovered: NaN },
+    })
+    .exec()
+    .then((result) => {
+      if (!result || result.length === 0) {
+        const err = new Error(
+          "could not find any result for querying ancient elements"
+        );
+        err.statusCode = 404;
+        throw err;
+      }
+      const cleanElementArray = [];
+      result.forEach((element) => {
+        if (element.propertyId) {
+          const elementProperty = JSON.parse(
+            JSON.stringify(element.propertyId)
+          );
+          cleanElementArray.push({
+            name: element.name,
+            symbol: element.symbol,
+            ...elementProperty,
+          });
+        }
+      });
+      res.status(200).json({
+        message: "array of ancient elements",
+        data: cleanElementArray,
+      });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};

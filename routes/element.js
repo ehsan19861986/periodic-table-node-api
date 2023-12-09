@@ -13,4 +13,7 @@ router.get(
   "/get-elements-property-ordered/:propertyName&:recordLimit&:orderType",
   elementController.getElementsOrderedByProperty
 );
+
+router.get("/get-ancient-elements", elementController.getAncientElements);
+
 module.exports = router;
