@@ -10,7 +10,7 @@ router.get(
 );
 
 router.get(
-  "/get-elements-property-ordered/:propertyName&:recordLimit",
+  "/get-elements-property-ordered/:propertyName&:recordLimit&:orderType",
   elementController.getElementsOrderedByProperty
 );
 module.exports = router;

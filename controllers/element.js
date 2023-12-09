@@ -1,4 +1,5 @@
 const Element = require("../models/element");
+const { preprocessElementProperty } = require("../helpers/elementHelper");
 exports.getElementBasedOnIndex = (req, res, next) => {
   const elementIndex = req.params.elementIndex;
   Element.findById(elementIndex)
@@ -48,8 +49,9 @@ exports.getElementBasedOnIndex = (req, res, next) => {
     });
 };
 exports.getElementsOrderedByProperty = (req, res, next) => {
-  const { propertyName, recordLimit } = req.params;
+  const { propertyName, recordLimit, orderType } = req.params;
   const propertyList = [
+    "atomicNumber",
     "atomicMass",
     "electronegativity",
     "atomicRadius",
@@ -60,17 +62,29 @@ exports.getElementsOrderedByProperty = (req, res, next) => {
     "density",
     "yearDiscovered",
   ];
+  const validationError = [];
   if (!propertyList.includes(propertyName)) {
-    const err = new Error(
+    validationError.push(
       "could not find the following property: " + propertyName
     );
-    err.statusCode = 404;
-    throw err;
   }
   if (!(0 < recordLimit && recordLimit < 119)) {
-    const err = new Error(
+    validationError.push(
       "record limit must be between 1 to 118, passed record limit is : " +
         recordLimit
+    );
+  }
+  const orderTypes = ["Asc", "Desc"];
+  if (!orderTypes.includes(orderType)) {
+    validationError.push(
+      "order type must be either Asc or Desc, passed order type is : " +
+        orderType
+    );
+  }
+  if (validationError.length > 0) {
+    const err = new Error(
+      "getElementsOrderedByProperty api call is failed due to following error(s): \r\n " +
+        validationError.join("\r\n")
     );
     err.statusCode = 404;
     throw err;
@@ -78,20 +92,16 @@ exports.getElementsOrderedByProperty = (req, res, next) => {
 
   Element.find({}, null)
     .select({ _id: 0, __v: 0 })
-    .limit(recordLimit)
     .populate({
       path: "propertyId",
       modal: "Property",
       select: {
-        // elementId: 0,
         _id: 0,
-        // __v: 0,
         [propertyName]: 1,
       },
-      // match: { [propertyName]: { $ne: "N/A" } },
-      transform: (doc) => (doc[propertyName] === "N/A" ? null : doc),
+      match: { [propertyName]: { $ne: "N/A" } },
     })
-    .sort({ [propertyName]: -1 })
+    .exec()
     .then((result) => {
       if (!result) {
         const err = new Error(
@@ -106,26 +116,34 @@ exports.getElementsOrderedByProperty = (req, res, next) => {
       return result;
     })
     .then((data) => {
-      const sortedElementArray = [];
-      data.forEach((ele) => {
-        const updatedElementroperty = JSON.parse(
-          JSON.stringify(ele.propertyId)
+      return preprocessElementProperty(
+        data,
+        propertyName,
+        recordLimit,
+        orderType
+      );
+    })
+    .then((result) => {
+      if (!result || result.length === 0) {
+        const err = new Error(
+          "could not find any result with following property name : " +
+            propertyName +
+            " and following record limit: " +
+            recordLimit
         );
-        sortedElementArray.push({
-          name: ele.name,
-          symbol: ele.symbol,
-          atomicNumber: ele.atomicNumber,
-          atomicMass: ele.atomicNumber,
-          ...updatedElementroperty,
-        });
-      });
+        err.statusCode = 404;
+        throw err;
+      }
+      return result;
+    })
+    .then((preparedElementArray) => {
       res.status(200).json({
         message:
           "array of sorted elements with following property name " +
           propertyName +
           " and record limit " +
           recordLimit,
-        data: sortedElementArray,
+        data: preparedElementArray,
       });
     })
     .catch((error) => {
