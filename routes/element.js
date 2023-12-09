@@ -20,4 +20,9 @@ router.get(
   elementController.getalphabeticallyOrderedElements
 );
 
+router.get(
+  "/get-standard-state-based-elements/:standardState",
+  elementController.getstandardStateBasedElements
+);
+
 module.exports = router;

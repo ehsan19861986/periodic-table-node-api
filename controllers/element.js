@@ -1,5 +1,8 @@
 const Element = require("../models/element");
-const { preprocessElementProperty } = require("../helpers/elementHelper");
+const {
+  preprocessElementProperty,
+  processElementNestedObject,
+} = require("../helpers/elementHelper");
 exports.getElementBasedOnIndex = (req, res, next) => {
   const elementIndex = req.params.elementIndex;
   Element.findById(elementIndex)
@@ -176,22 +179,9 @@ exports.getAncientElements = (req, res, next) => {
         err.statusCode = 404;
         throw err;
       }
-      const cleanElementArray = [];
-      result.forEach((element) => {
-        if (element.propertyId) {
-          const elementProperty = JSON.parse(
-            JSON.stringify(element.propertyId)
-          );
-          cleanElementArray.push({
-            name: element.name,
-            symbol: element.symbol,
-            ...elementProperty,
-          });
-        }
-      });
       res.status(200).json({
         message: "array of ancient elements",
-        data: cleanElementArray,
+        data: processElementNestedObject(result),
       });
     })
     .catch((error) => {
@@ -245,6 +235,51 @@ exports.getalphabeticallyOrderedElements = (req, res, next) => {
       res.status(200).json({
         message: "array of alphabetically-ordered elements",
         data: response,
+      });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};
+
+exports.getstandardStateBasedElements = (req, res, next) => {
+  const { standardState } = req.params;
+  const standardStateArray = ["Gas", "Solid", "Liquid"];
+  if (!standardStateArray.includes(standardState)) {
+    const err = new Error(
+      "could not find any result for querying elements baes on provided standard state  " +
+        standardState
+    );
+    err.statusCode = 404;
+    throw err;
+  }
+  Element.find({}, { _id: 0, __v: 0 })
+    .populate({
+      path: "propertyId",
+      model: "Property",
+      select: {
+        _id: 0,
+        standardState: 1,
+      },
+      match: { standardState: [standardState] },
+    })
+    .exec()
+    .then((response) => {
+      if (!response || response.length === 0) {
+        const err = new Error(
+          "could not find any result for querying standard state based elements"
+        );
+        err.statusCode = 404;
+        throw err;
+      }
+      res.status(200).json({
+        message:
+          "array of elements based on following standard state " +
+          standardState,
+        data: processElementNestedObject(response),
       });
     })
     .catch((error) => {

@@ -55,3 +55,18 @@ exports.preprocessElementProperty = function (
     .sort(compareElementProperty(propertyName, orderType))
     .slice(0, limit);
 };
+
+exports.processElementNestedObject = function (elementArray) {
+  const cleanElementArray = [];
+  elementArray.forEach((element) => {
+    if (element.propertyId) {
+      const elementProperty = JSON.parse(JSON.stringify(element.propertyId));
+      cleanElementArray.push({
+        name: element.name,
+        symbol: element.symbol,
+        ...elementProperty,
+      });
+    }
+  });
+  return cleanElementArray;
+};
