@@ -15,5 +15,9 @@ router.get(
 );
 
 router.get("/get-ancient-elements", elementController.getAncientElements);
+router.get(
+  "/get-alphabetically-ordered-elements/:nameType&:recordLimit&:orderType",
+  elementController.getalphabeticallyOrderedElements
+);
 
 module.exports = router;

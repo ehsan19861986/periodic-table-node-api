@@ -201,3 +201,56 @@ exports.getAncientElements = (req, res, next) => {
       next(error);
     });
 };
+exports.getalphabeticallyOrderedElements = (req, res, next) => {
+  const { nameType, recordLimit, orderType } = req.params;
+  const nameList = ["name", "symbol"];
+  const validationError = [];
+  if (!nameList.includes(nameType)) {
+    validationError.push("could not find the following name type: " + nameType);
+  }
+
+  if (!(0 < recordLimit && recordLimit < 119)) {
+    validationError.push(
+      "record limit must be between 1 to 118, passed record limit is : " +
+        recordLimit
+    );
+  }
+  const orderTypes = ["Asc", "Desc"];
+  if (!orderTypes.includes(orderType)) {
+    validationError.push(
+      "order type must be either Asc or Desc, passed order type is : " +
+        orderType
+    );
+  }
+  if (validationError.length > 0) {
+    const err = new Error(
+      "getalphabeticallyOrderedElements api call is failed due to following error(s): \r\n " +
+        validationError.join("\r\n")
+    );
+    err.statusCode = 404;
+    throw err;
+  }
+
+  Element.find({}, { [nameType]: 1, _id: 0 })
+    .sort({ [nameType]: [orderType] })
+    .limit(recordLimit)
+    .then((response) => {
+      if (!response || response.length === 0) {
+        const err = new Error(
+          "could not find any result for querying alphabetically ordered elements"
+        );
+        err.statusCode = 404;
+        throw err;
+      }
+      res.status(200).json({
+        message: "array of alphabetically-ordered elements",
+        data: response,
+      });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};
