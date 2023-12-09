@@ -25,9 +25,7 @@ exports.getElementBasedOnIndex = (req, res, next) => {
         err.statusCode = 404;
         throw err;
       }
-      const { name, symbol, atomicNumber, atomicMass } = JSON.parse(
-        JSON.stringify(element)
-      );
+      const { name, symbol } = JSON.parse(JSON.stringify(element));
       const updatedElementroperty = JSON.parse(
         JSON.stringify(element.propertyId)
       );
@@ -38,8 +36,6 @@ exports.getElementBasedOnIndex = (req, res, next) => {
         element: {
           name,
           symbol,
-          atomicNumber,
-          atomicMass,
           ...updatedElementroperty,
         },
       });
@@ -279,6 +275,62 @@ exports.getstandardStateBasedElements = (req, res, next) => {
         message:
           "array of elements based on following standard state " +
           standardState,
+        data: processElementNestedObject(response),
+      });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
+    });
+};
+
+exports.getElementsBasedOnGroupBlock = (req, res, next) => {
+  const { groupBlock } = req.params;
+  const groupTypes = [
+    "Alkali metal",
+    "Post-transition metal",
+    "Transition metal",
+    "Lanthanide",
+    "Halogen",
+    "Alkaline earth metal",
+    "Nonmetal",
+    "Noble gas",
+    "Actinide",
+    "Metalloid",
+  ];
+  if (!groupTypes.includes(groupBlock)) {
+    const err = new Error(
+      "could not find any result for querying elements baes on provided group block  " +
+        groupBlock
+    );
+    err.statusCode = 404;
+    throw err;
+  }
+  Element.find({}, null)
+    .populate({
+      path: "propertyId",
+      model: "Property",
+      select: {
+        _id: 0,
+        groupBlock: 1,
+      },
+      match: { groupBlock: [groupBlock] },
+    })
+    .exec()
+    .then((response) => {
+      if (!response || response.length === 0) {
+        const err = new Error(
+          "could not find any result for querying elements based on provided group block " +
+            groupBlock
+        );
+        err.statusCode = 404;
+        throw err;
+      }
+      res.status(200).json({
+        message:
+          "array of elements based on following group block " + groupBlock,
         data: processElementNestedObject(response),
       });
     })

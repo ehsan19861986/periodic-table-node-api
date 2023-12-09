@@ -25,4 +25,9 @@ router.get(
   elementController.getstandardStateBasedElements
 );
 
+router.get(
+  "/get-elements-based-on-group-block/:groupBlock",
+  elementController.getElementsBasedOnGroupBlock
+);
+
 module.exports = router;
