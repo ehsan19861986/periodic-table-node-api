@@ -5,8 +5,8 @@ exports.getGroupElements = (req, res, next) => {
 
   if (!(0 < groupIndex && groupIndex < 18)) {
     const err = new Error(
-      "could not find any result for querying groups based on provided group name  " +
-        groupName
+      "could not find any result for querying groups based on provided group index  " +
+        groupIndex
     );
     err.statusCode = 404;
     throw err;
@@ -36,7 +36,7 @@ exports.getGroupElements = (req, res, next) => {
         throw err;
       }
       res.status(200).json({
-        message: "elements for grou name " + groupName + " has been fetched",
+        message: "elements for group name " + groupName + " has been fetched",
         data: processGroupElementList(response[0]?.listOfElements),
       });
     })
@@ -45,5 +45,39 @@ exports.getGroupElements = (req, res, next) => {
         error.statusCode = 500;
       }
       next(error);
+    });
+};
+
+exports.getGroupDescription = (req, res, next) => {
+  const { groupIndex } = req.params;
+  if (!(0 < groupIndex && groupIndex < 18)) {
+    const error = new Error(
+      "could not find any result for querying groups based on provided group index  " +
+        groupIndex
+    );
+  }
+  const groupName = "Group " + groupIndex;
+  group
+    .find({ name: [groupName] })
+    .select("description -_id")
+    .then((response) => {
+      if (!response || response.length === 0) {
+        const error = new Error(
+          "could not find any result for querying groups based on provided group name " +
+            groupName
+        );
+      }
+      res.status(200).json({
+        message:
+          "description for group name " + groupName + " has been fetched",
+        data: response[0]?.description,
+      });
+      console.log(response);
+    })
+    .catch((err) => {
+      if (!err.statusCode) {
+        err.statusCode = 500;
+      }
+      next(err);
     });
 };
