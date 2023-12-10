@@ -3,6 +3,7 @@ const {
   preprocessElementProperty,
   processElementNestedObject,
 } = require("../helpers/elementHelper");
+const { PROPERTY_LIST } = require("../constants");
 exports.getElementBasedOnIndex = (req, res, next) => {
   const elementIndex = req.params.elementIndex;
   Element.findById(elementIndex)
@@ -49,20 +50,8 @@ exports.getElementBasedOnIndex = (req, res, next) => {
 };
 exports.getElementsOrderedByProperty = (req, res, next) => {
   const { propertyName, recordLimit, orderType } = req.params;
-  const propertyList = [
-    "atomicNumber",
-    "atomicMass",
-    "electronegativity",
-    "atomicRadius",
-    "ionizationEnergy",
-    "electronAffinity",
-    "meltingPoint",
-    "boilingPoint",
-    "density",
-    "yearDiscovered",
-  ];
   const validationError = [];
-  if (!propertyList.includes(propertyName)) {
+  if (!PROPERTY_LIST.includes(propertyName)) {
     validationError.push(
       "could not find the following property: " + propertyName
     );
