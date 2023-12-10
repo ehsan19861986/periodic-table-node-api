@@ -7,5 +7,6 @@ router.get(
   "/get-group-description/:groupIndex",
   groupController.getGroupDescription
 );
+router.get("/get-group-names", groupController.getGroupNames);
 
 module.exports = router;

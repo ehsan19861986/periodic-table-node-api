@@ -10,3 +10,16 @@ exports.processGroupElementList = function (groupList) {
   });
   return processedGroupList;
 };
+
+exports.processGroupName = function (groupArray) {
+  if (!groupArray || groupArray.length === 0) {
+    const error = new Error("list of groups is null or empty");
+    error.statusCode = 404;
+    throw error;
+  }
+  const processedGroupArray = [];
+  groupArray.forEach((group) => {
+    processedGroupArray.push(group.name);
+  });
+  return processedGroupArray;
+};

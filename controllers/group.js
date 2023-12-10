@@ -1,5 +1,8 @@
 const group = require("../models/group");
-const { processGroupElementList } = require("../helpers/groupHelper");
+const {
+  processGroupElementList,
+  processGroupName,
+} = require("../helpers/groupHelper");
 exports.getGroupElements = (req, res, next) => {
   const { groupIndex } = req.params;
 
@@ -55,6 +58,8 @@ exports.getGroupDescription = (req, res, next) => {
       "could not find any result for querying groups based on provided group index  " +
         groupIndex
     );
+    error.statusCode = 404;
+    throw error;
   }
   const groupName = "Group " + groupIndex;
   group
@@ -66,18 +71,42 @@ exports.getGroupDescription = (req, res, next) => {
           "could not find any result for querying groups based on provided group name " +
             groupName
         );
+        error.statusCode = 404;
+        throw error;
       }
       res.status(200).json({
         message:
           "description for group name " + groupName + " has been fetched",
         data: response[0]?.description,
       });
-      console.log(response);
     })
     .catch((err) => {
       if (!err.statusCode) {
         err.statusCode = 500;
       }
       next(err);
+    });
+};
+
+exports.getGroupNames = (req, res, next) => {
+  group
+    .find({})
+    .select("name -_id")
+    .then((response) => {
+      if (!response || response.length === 0) {
+        const err = new Error("could not find any result for querying groups");
+        err.statusCode = 404;
+        throw err;
+      }
+      res.status(200).json({
+        message: "group names has been fetched",
+        data: processGroupName(response),
+      });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
     });
 };
