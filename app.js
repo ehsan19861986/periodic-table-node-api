@@ -1,5 +1,6 @@
 const express = require("express");
 const elementRoutes = require("./routes/element");
+const groupRoutes = require("./routes/group");
 const bodyParser = require("body-parser");
 const element = require("./models/element");
 const group = require("./models/group");
@@ -21,6 +22,7 @@ app.use((req, res, next) => {
 });
 
 app.use("/element", elementRoutes);
+app.use("/group", groupRoutes);
 
 main()
   .then(() => {

@@ -246,7 +246,7 @@ exports.getstandardStateBasedElements = (req, res, next) => {
   const standardStateArray = ["Gas", "Solid", "Liquid"];
   if (!standardStateArray.includes(standardState)) {
     const err = new Error(
-      "could not find any result for querying elements baes on provided standard state  " +
+      "could not find any result for querying elements based on provided standard state  " +
         standardState
     );
     err.statusCode = 404;
@@ -302,7 +302,7 @@ exports.getElementsBasedOnGroupBlock = (req, res, next) => {
   ];
   if (!groupTypes.includes(groupBlock)) {
     const err = new Error(
-      "could not find any result for querying elements baes on provided group block  " +
+      "could not find any result for querying elements based on provided group block  " +
         groupBlock
     );
     err.statusCode = 404;
