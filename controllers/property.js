@@ -58,3 +58,78 @@ exports.getMinMaxElementProperty = (req, res, next) => {
       next(error);
     });
 };
+
+exports.getPropertiesMinMaxRange = (req, res, next) => {
+  const propertyRangeList = [];
+  const minMaxRangeProperties = new Promise((resolve, reject) => {
+    PROPERTY_LIST.forEach(async (prop, index, array) => {
+      try {
+        const minMaxRange = await property.aggregate([
+          {
+            $match: {
+              [prop]: { $nin: ["N/A", NaN] },
+            },
+          },
+          {
+            $project: {
+              [prop]: 1,
+            },
+          },
+          {
+            $group: {
+              _id: {
+                propertyName: prop,
+              },
+              avg: { $avg: `$${prop}` },
+              max: { $max: `$${prop}` },
+              min: { $min: `$${prop}` },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              [prop]: {
+                average: "$avg",
+                max: "$max",
+                min: "$min",
+              },
+            },
+          },
+        ]);
+        if (prop === "yearDiscovered") {
+          propertyRangeList.push({
+            [prop]: {
+              ...minMaxRange[0][prop],
+              average: Math.floor(minMaxRange[0][prop].average),
+            },
+          });
+        } else {
+          propertyRangeList.push(minMaxRange[0]);
+        }
+        if (array.length === propertyRangeList.length) {
+          resolve(propertyRangeList);
+        }
+      } catch (error) {
+        if (!error) {
+          error.statusCode = 500;
+        }
+        throw error;
+      }
+    });
+  });
+  minMaxRangeProperties
+    .then((data) => {
+      res.status(200).json({
+        message:
+          "average, minimum, and maximum values for all measurable periodic table properties are fetched",
+        data,
+      });
+    })
+    .catch(() => {
+      const error = new Error(
+        "error happened while aggregating min, max and average of measurable periodic table properties"
+      );
+      error.statusCode = 404;
+      throw error;
+    });
+};
