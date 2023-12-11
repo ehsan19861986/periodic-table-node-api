@@ -10,3 +10,4 @@ exports.PROPERTY_LIST = [
   "density",
   "yearDiscovered",
 ];
+exports.ORDER_TYPE = ["Asc", "Desc"];

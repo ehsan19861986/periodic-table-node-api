@@ -11,4 +11,9 @@ router.get(
   "/get-periodic-table-properties-range",
   propertyController.getPropertiesMinMaxRange
 );
+
+router.get(
+  "/get-elements-within-range/:propertyName&:propertyRange&:orderType",
+  propertyController.getElementsWithinPropertyRange
+);
 module.exports = router;

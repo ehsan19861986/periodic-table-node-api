@@ -3,7 +3,7 @@ const {
   preprocessElementProperty,
   processElementNestedObject,
 } = require("../helpers/elementHelper");
-const { PROPERTY_LIST } = require("../constants");
+const { PROPERTY_LIST, ORDER_TYPE } = require("../constants");
 exports.getElementBasedOnIndex = (req, res, next) => {
   const elementIndex = req.params.elementIndex;
   Element.findById(elementIndex)
@@ -62,8 +62,8 @@ exports.getElementsOrderedByProperty = (req, res, next) => {
         recordLimit
     );
   }
-  const orderTypes = ["Asc", "Desc"];
-  if (!orderTypes.includes(orderType)) {
+
+  if (!ORDER_TYPE.includes(orderType)) {
     validationError.push(
       "order type must be either Asc or Desc, passed order type is : " +
         orderType
@@ -190,8 +190,8 @@ exports.getalphabeticallyOrderedElements = (req, res, next) => {
         recordLimit
     );
   }
-  const orderTypes = ["Asc", "Desc"];
-  if (!orderTypes.includes(orderType)) {
+
+  if (!ORDER_TYPE.includes(orderType)) {
     validationError.push(
       "order type must be either Asc or Desc, passed order type is : " +
         orderType

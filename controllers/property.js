@@ -1,4 +1,4 @@
-const { PROPERTY_LIST } = require("../constants");
+const { PROPERTY_LIST, ORDER_TYPE } = require("../constants");
 const property = require("../models/property");
 const { processPropertyList } = require("../helpers/propertyHelper");
 exports.getMinMaxElementProperty = (req, res, next) => {
@@ -131,5 +131,85 @@ exports.getPropertiesMinMaxRange = (req, res, next) => {
       );
       error.statusCode = 404;
       throw error;
+    });
+};
+
+exports.getElementsWithinPropertyRange = (req, res, next) => {
+  const { propertyName, propertyRange, orderType } = req.params;
+  const validationErrors = [];
+  if (!PROPERTY_LIST.includes(propertyName)) {
+    validationErrors.push(
+      "could not find the following property: " + propertyName
+    );
+  }
+  const propertyRangePattern = /[+-]?([0-9]+([.][0-9]*)?|[.][0-9]+)/;
+  if (!propertyRangePattern.test(propertyRange)) {
+    validationErrors.push(
+      "property range must be in Number-Number format, but the following was provided: " +
+        propertyRange
+    );
+  }
+  const providedRange = propertyRange
+    .split("-")
+    .map((range) => parseFloat(range));
+  if (!(providedRange[0] < providedRange[1])) {
+    validationErrors.push(
+      "second arg for property range must be larger than first arg, but the following was provided: " +
+        propertyRange
+    );
+  }
+  if (!ORDER_TYPE.includes(orderType)) {
+    validationErrors.push(
+      "order type must be either Asc or Desc, passed order type is : " +
+        orderType
+    );
+  }
+
+  if (validationErrors.length > 0) {
+    const error = new Error(
+      "getElementsOrderedByProperty api call is failed due to following error(s): \r\n " +
+        validationErrors.join("\r\n")
+    );
+    error.statusCode = 404;
+    throw error;
+  }
+
+  property
+    .find({
+      [propertyName]: { $gte: providedRange[0], $lte: providedRange[1] },
+    })
+    .select(`${propertyName} -_id`)
+    .populate({
+      path: "elementId",
+      model: "Element",
+      select: "-_id -__v -propertyId",
+    })
+    .sort({ [propertyName]: [orderType] })
+    .then((response) => {
+      if (!response || response.length === 0) {
+        const error = new Error(
+          "could not find any result querying property collection based on property name: " +
+            propertyName +
+            " and property range: " +
+            propertyRange
+        );
+        error.statusCode = 404;
+        throw error;
+      }
+      res.status(200).json({
+        message:
+          "elements for the following property name: " +
+          propertyName +
+          " within property range: " +
+          propertyRange +
+          " has been fetched.",
+        data: processPropertyList(response),
+      });
+    })
+    .catch((error) => {
+      if (!error.statusCode) {
+        error.statusCode = 500;
+      }
+      next(error);
     });
 };
