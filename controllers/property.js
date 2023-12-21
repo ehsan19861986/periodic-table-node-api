@@ -176,7 +176,7 @@ exports.getElementsWithinPropertyRange = (req, res, next) => {
     error.statusCode = 404;
     throw error;
   }
-
+  orderObj = { Asc: 1, Desc: -1 };
   property
     .find({
       [propertyName]: { $gte: providedRange[0], $lte: providedRange[1] },
@@ -187,7 +187,7 @@ exports.getElementsWithinPropertyRange = (req, res, next) => {
       model: "Element",
       select: "-_id -__v -propertyId",
     })
-    .sort({ [propertyName]: [orderType] })
+    .sort({ [propertyName]: orderObj[orderType] })
     .then((response) => {
       if (!response || response.length === 0) {
         const error = new Error(
@@ -223,7 +223,6 @@ exports.getChemicalCompoundAtomicMass = (req, res, next) => {
     /[BCFHIKNOPSUVWY]|A[cglmrstu]|B[aehikr]|C[adefl-orsu]|D[bsy]|E[rsu]|F[elmr]|G[ade]|H[efgos]|I[nr]|Kr|L[airuv]|M[dgnot]|N[abdeiop]|Os|P[abdmortu]|R[abe-hnu]|S[bcegimnr]|T[abcehilm]|Uu[opst]|Xe|Yb|Z[nr]  /;
 
   if (!chemicalCompoundPattern.test(chemicalCompound)) {
-    console.log('sss')
     const error = new Error(
       "chemical compound must be in correct format, but the following was provided: " +
         chemicalCompound

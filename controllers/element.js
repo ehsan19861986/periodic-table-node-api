@@ -205,29 +205,30 @@ exports.getalphabeticallyOrderedElements = (req, res, next) => {
     err.statusCode = 404;
     throw err;
   }
-
-  Element.find({}, { [nameType]: 1, _id: 0 })
-    .sort({ [nameType]: [orderType] })
-    .limit(recordLimit)
-    .then((response) => {
-      if (!response || response.length === 0) {
-        const err = new Error(
-          "could not find any result for querying alphabetically ordered elements"
-        );
-        err.statusCode = 404;
-        throw err;
-      }
-      res.status(200).json({
-        message: "array of alphabetically-ordered elements",
-        data: response,
+  orderObj = { Asc: 1, Desc: -1 };
+  if (orderType)
+    Element.find({}, { [nameType]: 1, _id: 0 })
+      .sort({ [nameType]: orderObj[orderType] })
+      .limit(recordLimit)
+      .then((response) => {
+        if (!response || response.length === 0) {
+          const err = new Error(
+            "could not find any result for querying alphabetically ordered elements"
+          );
+          err.statusCode = 404;
+          throw err;
+        }
+        res.status(200).json({
+          message: "array of alphabetically-ordered elements",
+          data: response,
+        });
+      })
+      .catch((error) => {
+        if (!error.statusCode) {
+          error.statusCode = 500;
+        }
+        next(error);
       });
-    })
-    .catch((error) => {
-      if (!error.statusCode) {
-        error.statusCode = 500;
-      }
-      next(error);
-    });
 };
 
 exports.getstandardStateBasedElements = (req, res, next) => {
