@@ -1,6 +1,9 @@
 const { PROPERTY_LIST, ORDER_TYPE } = require("../constants");
 const property = require("../models/property");
-const { processPropertyList } = require("../helpers/propertyHelper");
+const {
+  processPropertyList,
+  processChemicalCompoundAtomicMass,
+} = require("../helpers/propertyHelper");
 exports.getMinMaxElementProperty = (req, res, next) => {
   const { propertyName } = req.params;
   if (!PROPERTY_LIST.includes(propertyName)) {
@@ -211,5 +214,56 @@ exports.getElementsWithinPropertyRange = (req, res, next) => {
         error.statusCode = 500;
       }
       next(error);
+    });
+};
+
+exports.getChemicalCompoundAtomicMass = (req, res, next) => {
+  const { chemicalCompound } = req.params;
+  const chemicalCompoundPattern =
+    /[BCFHIKNOPSUVWY]|A[cglmrstu]|B[aehikr]|C[adefl-orsu]|D[bsy]|E[rsu]|F[elmr]|G[ade]|H[efgos]|I[nr]|Kr|L[airuv]|M[dgnot]|N[abdeiop]|Os|P[abdmortu]|R[abe-hnu]|S[bcegimnr]|T[abcehilm]|Uu[opst]|Xe|Yb|Z[nr]  /;
+
+  if (!chemicalCompoundPattern.test(chemicalCompound)) {
+    console.log('sss')
+    const error = new Error(
+      "chemical compound must be in correct format, but the following was provided: " +
+        chemicalCompound
+    );
+    error.statusCode = 404;
+    throw error;
+  }
+  chemicalCompound.split("").forEach((elementChar, index, array) => {
+    if (elementChar === ")") {
+      if (index + 1 <= array.length - 1) {
+        if (!(array[index + 1] >= "0" && array[index + 1] <= "9")) {
+          const error = new Error(
+            "chemical compound must be in correct format, but the following was provided: " +
+              chemicalCompound
+          );
+          error.statusCode = 404;
+          throw error;
+        }
+      } else {
+        const error = new Error(
+          "chemical compound must be in correct format, but the following was provided: " +
+            chemicalCompound
+        );
+        error.statusCode = 404;
+        throw error;
+      }
+    }
+  });
+  processChemicalCompoundAtomicMass(chemicalCompound)
+    .then((totalAtomicMass) => {
+      res.status(200).json({
+        message:
+          "total atomic mass is calculated for following compound: " +
+          chemicalCompound,
+        data: totalAtomicMass,
+      });
+    })
+    .catch((error) => {
+      const err = new Error(error);
+      err.statusCode = 422;
+      next(err);
     });
 };

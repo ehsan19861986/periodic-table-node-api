@@ -16,4 +16,9 @@ router.get(
   "/get-elements-within-range/:propertyName&:propertyRange&:orderType",
   propertyController.getElementsWithinPropertyRange
 );
+
+router.get(
+  "/get-chemical-compound-atomic-mass/:chemicalCompound",
+  propertyController.getChemicalCompoundAtomicMass
+);
 module.exports = router;

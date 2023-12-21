@@ -6,41 +6,6 @@
     "auditLog": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/.1ba76b5d93e6912070e8a2e4dd5dbcfbbf230d8e-audit.json",
     "files": [
         {
-            "date": 1701012599759,
-            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-11-26.log",
-            "hash": "049e501374488df7f4d4c2b444e30962fc2b3d8c161e4f04818364444158ddcc"
-        },
-        {
-            "date": 1701282569071,
-            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-11-29.log",
-            "hash": "6845a69c186fb8a0a73b016d36aa3d28888c5f5bb32f0c36415745edf9635e3c"
-        },
-        {
-            "date": 1701397985353,
-            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-11-30.log",
-            "hash": "ebfb5460cb3494574ee22072fac0ec5df3a0f837cac813ae452f6f43b28d39c2"
-        },
-        {
-            "date": 1701621544288,
-            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-03.log",
-            "hash": "5ab629a70b80b35d612a08f69d520cb27a2eb9053e61c4ce248d816583e26c28"
-        },
-        {
-            "date": 1701736620141,
-            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-04.log",
-            "hash": "c3a05ce83732a631d8b67dc5fc7e48ace97166f479b30017e69b35132089bf46"
-        },
-        {
-            "date": 1701826475432,
-            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-05.log",
-            "hash": "89dccc41010aa5b72c1f0d66d37c2184a1001840f1492f75938c8b5dc7b94956"
-        },
-        {
-            "date": 1701913749687,
-            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-06.log",
-            "hash": "810078e606fe1de868e1735e4481bbc6741288b7e0cf0f04923c950969a31cab"
-        },
-        {
             "date": 1702079076956,
             "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-08.log",
             "hash": "dc2c29a7f4846fd101e7092ab4d5333ceaa37993fd15a4779072acbfa8238398"
@@ -54,6 +19,56 @@
             "date": 1702181147437,
             "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-10.log",
             "hash": "e03d45148bed1f9922300b29ae61a7fe5682dafa931976f5ea4bbcbdd1d5d656"
+        },
+        {
+            "date": 1702420078664,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-12.log",
+            "hash": "ceb1012a5e183cbbdbaa80b65582985c62a6a7e8c97782eda4b609fa68311ffb"
+        },
+        {
+            "date": 1702520778241,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-13.log",
+            "hash": "8fbbad05bbbbd8ba7dc84abf7b8d49b2ad4821431adcfc863ce3eb6278d6e8f7"
+        },
+        {
+            "date": 1702605520083,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-14.log",
+            "hash": "978efc750a69579cb4518b6503a8e3b5c667e8bf6dba0d29f3459b754f3811ca"
+        },
+        {
+            "date": 1702695454646,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-15.log",
+            "hash": "e052c2a77da298c22f1721e0d890a8cdc30648068a312f65792197751e45672d"
+        },
+        {
+            "date": 1702749201617,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-16.log",
+            "hash": "3b242aad80a4518a85ee82f1097fb9f8d9ac2e4f5532f9fe9779d68dfb6b1999"
+        },
+        {
+            "date": 1702786201227,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-17.log",
+            "hash": "0f69b34a66168b85fef754b51d07beb26d6e3fc1136d09fa9b1ae4b214a34273"
+        },
+        {
+            "date": 1702875179746,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-18.log",
+            "hash": "9ae717343d8def76f69ab12aa1fa08d25565bf115be4050b0459b7fbb5ab5599"
+        },
+        {
+            "date": 1703025913769,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-19.log",
+            "hash": "1429ff4938db8d41c7d5bb6616bb9ff695dd7218f430dd523d2a391e6600fa9e"
+        },
+        {
+            "date": 1703047331565,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-20.log",
+            "hash": "ea119fa5c8bcbd15de4f21922257985134fd8120acf93fb247f8582d239058ea"
+        },
+        {
+            "date": 1703132246974,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-21.log",
+            "hash": "ec83e62f39275cbde6188da3ade7f3125586d9f938a6ee9a96ee952bda746da8"
         }
     ],
     "hashType": "sha256"
