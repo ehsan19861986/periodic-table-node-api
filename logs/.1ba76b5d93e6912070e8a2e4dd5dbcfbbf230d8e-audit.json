@@ -6,16 +6,6 @@
     "auditLog": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/.1ba76b5d93e6912070e8a2e4dd5dbcfbbf230d8e-audit.json",
     "files": [
         {
-            "date": 1702079076956,
-            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-08.log",
-            "hash": "dc2c29a7f4846fd101e7092ab4d5333ceaa37993fd15a4779072acbfa8238398"
-        },
-        {
-            "date": 1702094628043,
-            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-09.log",
-            "hash": "16be4f15fda348096e3c4b7079fce1b0146f816c256d82513f77f56ee8fe07dc"
-        },
-        {
             "date": 1702181147437,
             "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-10.log",
             "hash": "e03d45148bed1f9922300b29ae61a7fe5682dafa931976f5ea4bbcbdd1d5d656"
@@ -69,6 +59,21 @@
             "date": 1703132246974,
             "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-21.log",
             "hash": "ec83e62f39275cbde6188da3ade7f3125586d9f938a6ee9a96ee952bda746da8"
+        },
+        {
+            "date": 1703218367235,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-22.log",
+            "hash": "89f25dd94b81ae6dc6cc8eb6e1b345419545fb5eb97d9ce0a4a3d240008e36b6"
+        },
+        {
+            "date": 1703358661613,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-23.log",
+            "hash": "a2c0668f7764549822cebc36dbde98801c128dcce9e930de67dbd98050da81c0"
+        },
+        {
+            "date": 1703390466266,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-24.log",
+            "hash": "bd5587024c443aa5f09c56da8281995c39caf52c34d6eb8579e6c952a4fb3d9a"
         }
     ],
     "hashType": "sha256"

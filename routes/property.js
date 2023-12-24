@@ -21,4 +21,9 @@ router.get(
   "/get-chemical-compound-atomic-mass/:chemicalCompound",
   propertyController.getChemicalCompoundAtomicMass
 );
+
+router.get(
+  "/get-elements-electron-affinity-based-ordered/:elementList",
+  propertyController.getElementInElectronAffinityOrdered
+);
 module.exports = router;

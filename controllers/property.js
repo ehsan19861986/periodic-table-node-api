@@ -1,8 +1,10 @@
 const { PROPERTY_LIST, ORDER_TYPE } = require("../constants");
 const property = require("../models/property");
+const elementModel = require("../models/element");
 const {
   processPropertyList,
   processChemicalCompoundAtomicMass,
+  processElementsElectronAffinity,
 } = require("../helpers/propertyHelper");
 exports.getMinMaxElementProperty = (req, res, next) => {
   const { propertyName } = req.params;
@@ -264,5 +266,77 @@ exports.getChemicalCompoundAtomicMass = (req, res, next) => {
       const err = new Error(error);
       err.statusCode = 422;
       next(err);
+    });
+};
+
+exports.getElementInElectronAffinityOrdered = (req, res, next) => {
+  const { elementList } = req.params;
+  const parsedElementList = JSON.parse(JSON.stringify(elementList))
+    .replace(" ", "")
+    .split(",");
+  if (!Array.isArray(parsedElementList) || parsedElementList.length <= 1) {
+    const error = new Error(
+      "an array must be provided, but the following was provided: " +
+        parsedElementList
+    );
+    error.statusCode = 422;
+    throw error;
+  }
+  const parsedElements = parsedElementList.map((element) =>
+    element.split(" ").join("")
+  );
+  const elementSymbolPattern = /^[A-Z]{1}$|^[A-Z][a-z]$/;
+  parsedElements.forEach((elementSymbol) => {
+    if (elementSymbol === "" || !elementSymbolPattern.test(elementSymbol)) {
+      const error = new Error(
+        "a valid element symbol must be provided, but the following was provided: " +
+          elementSymbol
+      );
+      error.statusCode = 422;
+      throw error;
+    }
+  });
+
+  elementModel
+    .find({ symbol: { $in: parsedElements } })
+    .select("-__v -_id -name")
+    .populate({
+      path: "propertyId",
+      modal: "property",
+      select: "electronAffinity -_id",
+      match: { electronAffinity: { $ne: "N/A" } },
+    })
+    .exec()
+    .then((data) => {
+      if (!data || data.length === 0) {
+        const error = new Error(
+          "no result was found. all following element symbol inputs are invalid: " +
+            parsedElements
+        );
+        error.statusCode = 422;
+        throw error;
+      }
+      return processElementsElectronAffinity(data, parsedElements);
+    })
+    .then((result) => {
+      const resObj = {
+        message:
+          "the comparison between provided user elements electron affinity is done.",
+      };
+      if (result.invalidElementSymbols.length > 0) {
+        resObj["invalidElements"] =
+          "the following provided element symbols by user are invalid: " +
+          result.invalidElementSymbols;
+      }
+      if (result.elementsWithNoElectronAffinity.length > 0) {
+        resObj["noElectronAffinityElements"] =
+          "the following provided element symbols by user do not have electron affinity: " +
+          result.elementsWithNoElectronAffinity;
+      }
+      resObj["comparisonResult"] = result.sortedElementElectronAffinityStr;
+      res.status(200).json(resObj);
+    })
+    .catch((error) => {
+      next(error);
     });
 };

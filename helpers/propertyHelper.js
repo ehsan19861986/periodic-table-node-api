@@ -210,3 +210,109 @@ exports.processChemicalCompoundAtomicMass = function (chemicalCompound) {
       throw error;
     });
 };
+
+const generateComparisonMessage = function (sortedElectronAffinityList) {
+  let comparisonMessage = "";
+  sortedElectronAffinityList.forEach((element, index) => {
+    comparisonMessage =
+      comparisonMessage + `${index === 0 ? "" : " < "}` + element.symbol;
+  });
+  return comparisonMessage;
+};
+
+const compareElementElectronAffinity = function (elementOne, elementTwo) {
+  if (elementOne.electronAffinity < elementTwo.electronAffinity) {
+    return -1;
+  } else if (elementOne.electronAffinity > elementTwo.electronAffinity) {
+    return 1;
+  }
+  return 0;
+};
+
+const findInvalidElementSymbols = function (
+  elementsWithElectronAffinity,
+  elementsWithNoElectronAffinity,
+  userElementInput
+) {
+  const invalidElementSymbol = [];
+  const elementsWithAffinity = elementsWithElectronAffinity.map(
+    (element) => element.symbol
+  );
+  userElementInput.forEach((input) => {
+    if (
+      !(
+        elementsWithAffinity.includes(input) ||
+        elementsWithNoElectronAffinity.includes(input)
+      )
+    ) {
+      invalidElementSymbol.push(input);
+    }
+  });
+
+  return invalidElementSymbol;
+};
+const isElectronAffinityComparisonPossible = function (
+  elementsWithElectronAffinity,
+  elementsWithNoElectronAffinity,
+  userElementInput
+) {
+  const invalidSymbols = findInvalidElementSymbols(
+    elementsWithElectronAffinity,
+    elementsWithNoElectronAffinity,
+    userElementInput
+  );
+  if (elementsWithElectronAffinity.length <= 1) {
+    const error = new Error(
+      `no result was found.${
+        invalidSymbols.length > 0
+          ? " All following element symbol inputs are invalid: " +
+            invalidSymbols +
+            "."
+          : ""
+      } ${
+        elementsWithNoElectronAffinity.length > 0
+          ? " All of following elements do not have electron Affinity: " +
+            elementsWithNoElectronAffinity +
+            "."
+          : ""
+      }`
+    );
+    error.statusCode = 422;
+    throw error;
+  }
+  return invalidSymbols;
+};
+exports.processElementsElectronAffinity = function (
+  elementsElectronAffinity,
+  elementListInput
+) {
+  processedElementElectronAffinity = [];
+  elementsWithNoElectronAffinity = [];
+  elementsElectronAffinity.forEach((elementObj) => {
+    if (elementObj.propertyId) {
+      processedElementElectronAffinity.push({
+        symbol: elementObj.symbol,
+        electronAffinity: elementObj.propertyId.electronAffinity,
+      });
+    } else {
+      elementsWithNoElectronAffinity.push(elementObj.symbol);
+    }
+  });
+  const invalidElementSymbols = isElectronAffinityComparisonPossible(
+    processedElementElectronAffinity,
+    elementsWithNoElectronAffinity,
+    elementListInput
+  );
+  const sortedElementElectronAffinity = processedElementElectronAffinity.sort(
+    compareElementElectronAffinity
+  );
+
+  const sortedElementElectronAffinityStr = generateComparisonMessage(
+    sortedElementElectronAffinity
+  );
+  return {
+    sortedElementElectronAffinityStr,
+    elementsWithNoElectronAffinity,
+    invalidElementSymbols,
+  };
+};
