@@ -31,4 +31,9 @@ router.get(
   "/get-element-one-atom-mass/:elementSymbol",
   propertyController.getElementOneGramAtomMass
 );
+
+router.get(
+  "/get-element-mole-to-mass/:elementSymbol&:moleAmount",
+  propertyController.getElementMoleToMass
+);
 module.exports = router;
