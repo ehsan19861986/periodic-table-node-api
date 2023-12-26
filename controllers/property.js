@@ -347,6 +347,7 @@ exports.getElementOneGramAtomMass = (req, res, next) => {
   let { elementSymbol } = req.params;
   elementSymbol = elementSymbol.replace(" ", "");
   const elementSymbolPattern = /^[A-Z]{1}$|^[A-Z][a-z]$/;
+  let elementName = "";
   if (!elementSymbolPattern.test(elementSymbol)) {
     const error = new Error(
       "a valid element symbol must be provided, but the following was provided: " +
@@ -357,7 +358,7 @@ exports.getElementOneGramAtomMass = (req, res, next) => {
   }
   elementModel
     .find({ symbol: elementSymbol })
-    .select("-__v -_id -name")
+    .select("-__v -_id")
     .populate({
       path: "propertyId",
       modal: "property",
@@ -374,11 +375,12 @@ exports.getElementOneGramAtomMass = (req, res, next) => {
         error.statusCode = 422;
         throw error;
       }
+      elementName = data[0].name;
       return calculateOneAtomMass(data);
     })
     .then((data) => {
       res.status(200).json({
-        message: "mass of one atom in gram is calculated.",
+        message: `mass of one atom of ${elementName} in gram is calculated.`,
         data,
       });
     })
@@ -410,7 +412,7 @@ exports.getElementMoleToMass = (req, res, next) => {
 
   elementModel
     .find({ symbol: elementSymbol })
-    .select("-__v -_id -name")
+    .select("-__v -_id")
     .populate({
       path: "propertyId",
       modal: "property",
@@ -427,12 +429,75 @@ exports.getElementMoleToMass = (req, res, next) => {
         error.statusCode = 422;
         throw error;
       }
-      return data[0].propertyId.atomicMass * moleAmount;
+      return data;
     })
     .then((data) => {
       res.status(200).json({
-        message: "mass of " + moleAmount + " mole in gram is calculated.",
-        data,
+        message:
+          "mass of " +
+          moleAmount +
+          " mole of " +
+          data[0].name +
+          " in gram is calculated.",
+        data: data[0].propertyId.atomicMass * moleAmount,
+      });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
+exports.getElementMassToMole = (req, res, next) => {
+  const { elementSymbol, amountInGrams } = req.params;
+  const elementSymbolPattern = /^[A-Z]{1}$|^[A-Z][a-z]$/;
+  const gramsAmountPattern = /^[+-]?\d+(\.\d+)?$/;
+  if (!elementSymbolPattern.test(elementSymbol)) {
+    const error = new Error(
+      "a valid element symbol must be provided, but the following was provided: " +
+        elementSymbol
+    );
+    error.statusCode = 422;
+    throw error;
+  }
+  if (!gramsAmountPattern.test(amountInGrams)) {
+    const error = new Error(
+      "a valid mole amount must be provided, but the following was provided: " +
+        amountInGrams
+    );
+    error.statusCode = 422;
+    throw error;
+  }
+
+  elementModel
+    .find({ symbol: elementSymbol })
+    .select("-__v -_id")
+    .populate({
+      path: "propertyId",
+      modal: "property",
+      select: "atomicMass -_id",
+      match: { atomicMass: { $ne: "N/A" } },
+    })
+    .exec()
+    .then((data) => {
+      if (!data || data.length === 0 || !data[0].propertyId) {
+        const error = new Error(
+          "no result was found. all following element symbol inputs are invalid: " +
+            elementSymbol
+        );
+        error.statusCode = 422;
+        throw error;
+      }
+      return data;
+    })
+    .then((data) => {
+      res.status(200).json({
+        message:
+          "mass of " +
+          amountInGrams +
+          " grams of " +
+          data[0].name +
+          " in mole is calculated.",
+        data: amountInGrams / data[0].propertyId.atomicMass,
       });
     })
     .catch((error) => {
