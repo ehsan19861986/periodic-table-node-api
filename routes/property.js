@@ -41,4 +41,9 @@ router.get(
   "/get-element-mass-to-mole/:elementSymbol&:amountInGrams",
   propertyController.getElementMassToMole
 );
+
+router.get(
+  "/get-element-mass-to-atoms/:elementSymbol&:amountInGrams",
+  propertyController.getElementMassToAtoms
+);
 module.exports = router;

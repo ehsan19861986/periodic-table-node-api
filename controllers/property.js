@@ -1,4 +1,8 @@
-const { PROPERTY_LIST, ORDER_TYPE } = require("../constants");
+const {
+  PROPERTY_LIST,
+  ORDER_TYPE,
+  AVOGADRO_CONSTANT,
+} = require("../constants");
 const property = require("../models/property");
 const elementModel = require("../models/element");
 const {
@@ -461,7 +465,7 @@ exports.getElementMassToMole = (req, res, next) => {
   }
   if (!gramsAmountPattern.test(amountInGrams)) {
     const error = new Error(
-      "a valid mole amount must be provided, but the following was provided: " +
+      "a valid amount in grams must be provided, but the following was provided: " +
         amountInGrams
     );
     error.statusCode = 422;
@@ -498,6 +502,64 @@ exports.getElementMassToMole = (req, res, next) => {
           data[0].name +
           " in mole is calculated.",
         data: amountInGrams / data[0].propertyId.atomicMass,
+      });
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
+exports.getElementMassToAtoms = (req, res, next) => {
+  const { elementSymbol, amountInGrams } = req.params;
+  const elementSymbolPattern = /^[A-Z]{1}$|^[A-Z][a-z]$/;
+  const gramsAmountPattern = /^[+-]?\d+(\.\d+)?$/;
+  if (!elementSymbolPattern.test(elementSymbol)) {
+    const error = new Error(
+      "a valid element symbol must be provided, but the following was provided: " +
+        elementSymbol
+    );
+    error.statusCode = 422;
+    throw error;
+  }
+  if (!gramsAmountPattern.test(amountInGrams)) {
+    const error = new Error(
+      "a valid amount in grams must be provided, but the following was provided: " +
+        amountInGrams
+    );
+    error.statusCode = 422;
+    throw error;
+  }
+
+  elementModel
+    .find({ symbol: elementSymbol })
+    .select("-__v -_id")
+    .populate({
+      path: "propertyId",
+      modal: "property",
+      select: "atomicMass -_id",
+      match: { atomicMass: { $ne: "N/A" } },
+    })
+    .exec()
+    .then((data) => {
+      if (!data || data.length === 0 || !data[0].propertyId) {
+        const error = new Error(
+          "no result was found. all following element symbol inputs are invalid: " +
+            elementSymbol
+        );
+        error.statusCode = 422;
+        throw error;
+      }
+      return data;
+    })
+    .then((data) => {
+      res.status(200).json({
+        message:
+          amountInGrams +
+          " grams of " +
+          data[0].name +
+          " to number of its atoms is calculated.",
+        data:
+          (amountInGrams / data[0].propertyId.atomicMass) * AVOGADRO_CONSTANT,
       });
     })
     .catch((error) => {
