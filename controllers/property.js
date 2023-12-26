@@ -5,6 +5,7 @@ const {
   processPropertyList,
   processChemicalCompoundAtomicMass,
   processElementsElectronAffinity,
+  calculateOneAtomMass,
 } = require("../helpers/propertyHelper");
 exports.getMinMaxElementProperty = (req, res, next) => {
   const { propertyName } = req.params;
@@ -335,6 +336,50 @@ exports.getElementInElectronAffinityOrdered = (req, res, next) => {
       }
       resObj["comparisonResult"] = result.sortedElementElectronAffinityStr;
       res.status(200).json(resObj);
+    })
+    .catch((error) => {
+      next(error);
+    });
+};
+
+exports.getElementOneGramAtomMass = (req, res, next) => {
+  let { elementSymbol } = req.params;
+  elementSymbol = elementSymbol.replace(" ", "");
+  const elementSymbolPattern = /^[A-Z]{1}$|^[A-Z][a-z]$/;
+  if (!elementSymbolPattern.test(elementSymbol)) {
+    const error = new Error(
+      "a valid element symbol must be provided, but the following was provided: " +
+        elementSymbol
+    );
+    error.statusCode = 422;
+    throw error;
+  }
+  elementModel
+    .find({ symbol: elementSymbol })
+    .select("-__v -_id -name")
+    .populate({
+      path: "propertyId",
+      modal: "property",
+      select: "atomicMass -_id",
+      match: { atomicMass: { $ne: "N/A" } },
+    })
+    .exec()
+    .then((data) => {
+      if (!data || data.length === 0 || !data[0].propertyId) {
+        const error = new Error(
+          "no result was found. all following element symbol inputs are invalid: " +
+            elementSymbol
+        );
+        error.statusCode = 422;
+        throw error;
+      }
+      return calculateOneAtomMass(data);
+    })
+    .then((data) => {
+      res.status(200).json({
+        message: "mass of one atom in gram is calculated.",
+        data,
+      });
     })
     .catch((error) => {
       next(error);

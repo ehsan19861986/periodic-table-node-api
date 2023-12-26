@@ -1,4 +1,5 @@
 const elementModel = require("../models/element");
+const { AVOGADRO_CONSTANT } = require("../constants");
 
 exports.processPropertyList = function (propertyArray) {
   if (!propertyArray || propertyArray.length === 0) {
@@ -315,4 +316,8 @@ exports.processElementsElectronAffinity = function (
     elementsWithNoElectronAffinity,
     invalidElementSymbols,
   };
+};
+
+exports.calculateOneAtomMass = function (data) {
+  return data[0].propertyId.atomicMass / AVOGADRO_CONSTANT;
 };

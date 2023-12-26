@@ -26,4 +26,9 @@ router.get(
   "/get-elements-electron-affinity-based-ordered/:elementList",
   propertyController.getElementInElectronAffinityOrdered
 );
+
+router.get(
+  "/get-element-one-atom-mass/:elementSymbol",
+  propertyController.getElementOneGramAtomMass
+);
 module.exports = router;

@@ -11,3 +11,4 @@ exports.PROPERTY_LIST = [
   "yearDiscovered",
 ];
 exports.ORDER_TYPE = ["Asc", "Desc"];
+exports.AVOGADRO_CONSTANT = 6.02214179 * Math.pow(10, 23);
