@@ -3,8 +3,10 @@ const elementRoutes = require("./routes/element");
 const groupRoutes = require("./routes/group");
 const propertyRoutes = require("./routes/property");
 const bodyParser = require("body-parser");
+const helmet = require("helmet");
 const app = express();
 
+app.use(helmet());
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {
