@@ -2,10 +2,25 @@
   "name": "periodic-table-node-api",
   "version": "1.0.0",
   "description": "this api is to provide various information about periodic table and chemical elements",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "test": "jest",
+    "lint": "eslint .  --ext .js",
+    "lint-fix": "eslint --fix .  --ext .js",
+    "start": "nodemon app.js",
+    "initiateDB": "node database/setupDB.js"
+  },
+  "jest": {
+    "verbose": true,
+    "projects": [
+      {
+        "displayName": "test"
+      },
+      {
+        "runner": "jest-runner-eslint",
+        "displayName": "lint"
+      }
+    ]
   },
   "repository": {
     "type": "git",
@@ -24,9 +39,19 @@
   "homepage": "https://github.com/ehsan19861986/periodic-table-node-api#readme",
   "dependencies": {
     "body-parser": "^1.20.2",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "mongodb": "^6.3.0",
+    "mongoose": "^8.0.3",
+    "winston": "^3.11.0",
+    "winston-daily-rotate-file": "^4.7.1"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "dotenv": "^16.3.1",
+    "eslint": "^8.56.0",
+    "eslint-plugin-jest": "^27.6.0",
+    "jest": "^29.7.0",
+    "jest-runner-eslint": "^2.1.2",
+    "nodemon": "^3.0.2",
+    "supertest": "^6.3.3"
   }
 }
