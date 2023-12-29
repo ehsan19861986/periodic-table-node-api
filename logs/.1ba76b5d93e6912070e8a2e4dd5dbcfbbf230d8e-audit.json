@@ -6,21 +6,6 @@
     "auditLog": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/.1ba76b5d93e6912070e8a2e4dd5dbcfbbf230d8e-audit.json",
     "files": [
         {
-            "date": 1702420078664,
-            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-12.log",
-            "hash": "ceb1012a5e183cbbdbaa80b65582985c62a6a7e8c97782eda4b609fa68311ffb"
-        },
-        {
-            "date": 1702520778241,
-            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-13.log",
-            "hash": "8fbbad05bbbbd8ba7dc84abf7b8d49b2ad4821431adcfc863ce3eb6278d6e8f7"
-        },
-        {
-            "date": 1702605520083,
-            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-14.log",
-            "hash": "978efc750a69579cb4518b6503a8e3b5c667e8bf6dba0d29f3459b754f3811ca"
-        },
-        {
             "date": 1702695454646,
             "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-15.log",
             "hash": "e052c2a77da298c22f1721e0d890a8cdc30648068a312f65792197751e45672d"
@@ -79,6 +64,21 @@
             "date": 1703564020284,
             "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-26.log",
             "hash": "ae10d8fdef3e6a6529601789ca2070f36b6bc4b56d609573e0f6512816b8571c"
+        },
+        {
+            "date": 1703650345310,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-27.log",
+            "hash": "7b4412c506f7f15c52451c84d3570919318498a7f8f89411e3b47f2707fc75b5"
+        },
+        {
+            "date": 1703736165427,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-28.log",
+            "hash": "00e45ade80cbfbdba901fc3487eb8062c135651e796cb6b88546fdceae20cf3a"
+        },
+        {
+            "date": 1703822404629,
+            "name": "/home/admiral/Desktop/Periodic Table project/periodic-table-node-api/logs/log-file-2023-12-29.log",
+            "hash": "1243b954e9c6b5ac23bdd238f57bec0e57c7500be5ad6638630bf464f2f3b707"
         }
     ],
     "hashType": "sha256"

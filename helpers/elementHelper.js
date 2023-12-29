@@ -41,7 +41,10 @@ exports.preprocessElementProperty = function (
     );
     if (
       updatedElementroperty &&
-      updatedElementroperty.hasOwnProperty(propertyName) &&
+      Object.prototype.hasOwnProperty.call(
+        updatedElementroperty,
+        propertyName
+      ) &&
       updatedElementroperty[propertyName]
     ) {
       cleanedElementList.push({

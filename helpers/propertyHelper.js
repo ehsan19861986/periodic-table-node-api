@@ -96,13 +96,11 @@ const calculateAtomicMass = function (chemicalCompoundSlice, quantity) {
       }
       return data[0].propertyId.atomicMass * quantity;
     })
-    .catch((error) => {
+    .catch(() => {
       return -1;
     });
 };
 const isElementLegit = async function (compoundPiece, compoundKey) {
-  if (compoundPiece.split(/(?=[A-Z]|[\xe0-\uffff])/)) {
-  }
   let componentQuantityPattern = /[0-9]/;
   let componentLetterPattern = /.*[A-Za-z]|[\xe0-\uffff]/;
   let componentLetter = compoundPiece.match(componentLetterPattern)[0];
@@ -113,12 +111,12 @@ const isElementLegit = async function (compoundPiece, compoundKey) {
     componentQuantity = 1;
   }
   if (compoundKey) {
-    if (compoundKey.hasOwnProperty(componentLetter)) {
+    if (Object.prototype.hasOwnProperty.call(compoundKey, componentLetter)) {
       return processInnerCompound(compoundPiece, compoundKey)
         .then((data) => {
           return data;
         })
-        .catch((error) => {
+        .catch(() => {
           return -1;
         });
     }
@@ -143,8 +141,8 @@ const preprocessChemicalCompounds = function (compound) {
   let restructuredCompound = compound;
   let ind = 0;
   do {
-    mostNestedOpenBracket = restructuredCompound.lastIndexOf("(");
-    mostNestedCloseBracket = restructuredCompound.indexOf(")");
+    const mostNestedOpenBracket = restructuredCompound.lastIndexOf("(");
+    const mostNestedCloseBracket = restructuredCompound.indexOf(")");
     const componentKey = String.fromCharCode(224 + ind);
     compoundComponents[String.fromCharCode(224 + ind)] =
       restructuredCompound.slice(
@@ -287,8 +285,8 @@ exports.processElementsElectronAffinity = function (
   elementsElectronAffinity,
   elementListInput
 ) {
-  processedElementElectronAffinity = [];
-  elementsWithNoElectronAffinity = [];
+  const processedElementElectronAffinity = [];
+  const elementsWithNoElectronAffinity = [];
   elementsElectronAffinity.forEach((elementObj) => {
     if (elementObj.propertyId) {
       processedElementElectronAffinity.push({

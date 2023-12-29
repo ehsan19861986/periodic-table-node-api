@@ -74,7 +74,7 @@ exports.getElementsOrderedByProperty = (req, res, next) => {
       "getElementsOrderedByProperty api call is failed due to following error(s): \r\n " +
         validationError.join("\r\n")
     );
-    err.statusCode = 404;
+    err.statusCode = 422;
     throw err;
   }
 
@@ -202,10 +202,10 @@ exports.getalphabeticallyOrderedElements = (req, res, next) => {
       "getalphabeticallyOrderedElements api call is failed due to following error(s): \r\n " +
         validationError.join("\r\n")
     );
-    err.statusCode = 404;
+    err.statusCode = 422;
     throw err;
   }
-  orderObj = { Asc: 1, Desc: -1 };
+  const orderObj = { Asc: 1, Desc: -1 };
   if (orderType)
     Element.find({}, { [nameType]: 1, _id: 0 })
       .sort({ [nameType]: orderObj[orderType] })

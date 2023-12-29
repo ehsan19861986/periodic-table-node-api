@@ -10,7 +10,6 @@ const {
   processChemicalCompoundAtomicMass,
   processElementsElectronAffinity,
   calculateOneAtomMass,
-  calculateMassBasedOnMole,
 } = require("../helpers/propertyHelper");
 exports.getMinMaxElementProperty = (req, res, next) => {
   const { propertyName } = req.params;
@@ -70,10 +69,11 @@ exports.getMinMaxElementProperty = (req, res, next) => {
     });
 };
 
+// eslint-disable-next-line no-unused-vars
 exports.getPropertiesMinMaxRange = (req, res, next) => {
   const propertyRangeList = [];
-  const minMaxRangeProperties = new Promise((resolve, reject) => {
-    PROPERTY_LIST.forEach(async (prop, index, array) => {
+  const minMaxRangeProperties = new Promise((resolve) => {
+    PROPERTY_LIST.forEach(async (prop, _index, array) => {
       try {
         const minMaxRange = await property.aggregate([
           {
@@ -141,7 +141,7 @@ exports.getPropertiesMinMaxRange = (req, res, next) => {
         "error happened while aggregating min, max and average of measurable periodic table properties"
       );
       error.statusCode = 404;
-      throw error;
+      next(error);
     });
 };
 
@@ -184,7 +184,7 @@ exports.getElementsWithinPropertyRange = (req, res, next) => {
     error.statusCode = 404;
     throw error;
   }
-  orderObj = { Asc: 1, Desc: -1 };
+  const orderObj = { Asc: 1, Desc: -1 };
   property
     .find({
       [propertyName]: { $gte: providedRange[0], $lte: providedRange[1] },
@@ -228,7 +228,7 @@ exports.getElementsWithinPropertyRange = (req, res, next) => {
 exports.getChemicalCompoundAtomicMass = (req, res, next) => {
   const { chemicalCompound } = req.params;
   const chemicalCompoundPattern =
-    /[BCFHIKNOPSUVWY]|A[cglmrstu]|B[aehikr]|C[adefl-orsu]|D[bsy]|E[rsu]|F[elmr]|G[ade]|H[efgos]|I[nr]|Kr|L[airuv]|M[dgnot]|N[abdeiop]|Os|P[abdmortu]|R[abe-hnu]|S[bcegimnr]|T[abcehilm]|Uu[opst]|Xe|Yb|Z[nr]  /;
+    /[BCFHIKNOPSUVWY]|A[cglmrstu]|B[aehikr]|C[adefl-orsu]|D[bsy]|E[rsu]|F[elmr]|G[ade]|H[efgos]|I[nr]|Kr|L[airuv]|M[dgnot]|N[abdeiop]|Os|P[abdmortu]|R[abe-hnu]|S[bcegimnr]|T[abcehilm]|Uu[opst]|Xe|Yb|Z[nr]/;
 
   if (!chemicalCompoundPattern.test(chemicalCompound)) {
     const error = new Error(

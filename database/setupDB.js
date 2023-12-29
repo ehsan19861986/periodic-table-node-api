@@ -5,7 +5,7 @@ const { initPropertyTable } = require("./setupPropertyTable");
 const { initGroupTable } = require("./setUpGroupTable");
 const { main } = require("./DBConnection");
 
-initChemicalPeriodicTableDB = async function () {
+const initChemicalPeriodicTableDB = async function () {
   try {
     const doesDBNeedsUpdate = process.env.npm_config_updatedatabase;
     const isElementTableInitiated = await initElementTable(doesDBNeedsUpdate);
@@ -28,7 +28,7 @@ initChemicalPeriodicTableDB = async function () {
 const mainSetupDB = async function () {
   try {
     main();
-    const result = await initChemicalPeriodicTableDB();
+    await initChemicalPeriodicTableDB();
 
     await mongoose.disconnect();
   } catch (error) {
